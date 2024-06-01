@@ -16,11 +16,14 @@ jobs:
     - uses: actions/checkout@v4
     - name: IPFS Publish
       id: IPFS
-      uses: piotrjwegrzyn/ipfs-aio-publisher@v1.1.0
+      uses: piotrjwegrzyn/ipfs-aio-publisher@v1.2.0
       with:
         upload_path: 'ui/'
-        remote_service_name: ${{ secrets.REMOTE_SERVICE_NAME }}
+        remote_service_name: ${{ env.REMOTE_SERVICE_NAME }}
         remote_service_endpoint: ${{ secrets.REMOTE_SERVICE_ENDPOINT }}
         remote_service_key: ${{ secrets.REMOTE_SERVICE_KEY }}
+        remote_background: ${{ env.REMOTE_BACKGROUND }}
+        remote_unpin_old_cid: ${{ env.REMOTE_UNPIN_OLD_CID }}
         publish_key_name: ${{ secrets.PUBLISH_KEY_NAME }}
         publish_key_value: ${{ secrets.PUBLISH_KEY_VALUE }}
+        propagate_sleep: ${{ env.PROPAGATE_TIME }}
