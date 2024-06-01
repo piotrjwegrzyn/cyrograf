@@ -1,9 +1,10 @@
 name: UI integration for Cyrograf
 
 on:
+  workflow_dispatch: {}
   pull_request:
     branches:
-      - main
+      - master
     types:
       - closed
 
