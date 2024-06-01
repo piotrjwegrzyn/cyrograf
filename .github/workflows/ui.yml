@@ -3,18 +3,18 @@ name: UI integration for Cyrograf
 on:
   workflow_dispatch: {}
   pull_request:
-    branches:
-      - master
-    types:
-      - closed
+    branches: [ master]
+    paths: [ 'ui/**' ]
+    types: [ closed ]
 
 jobs:
   push_to_ipfs:
+    if: github.event.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     name: Pin and publish
     steps:
     - uses: actions/checkout@v4
-    - name: IPFS Publish
+    - name: IPFS Pin & Publish
       id: IPFS
       uses: piotrjwegrzyn/ipfs-aio-publisher@v1.2.3
       with:
