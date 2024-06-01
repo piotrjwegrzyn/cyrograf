@@ -26,4 +26,4 @@ jobs:
         remote_unpin_old_cid: ${{ env.REMOTE_UNPIN_OLD_CID }}
         publish_key_name: ${{ secrets.PUBLISH_KEY_NAME }}
         publish_key_value: ${{ secrets.PUBLISH_KEY_VALUE }}
-        propagate_sleep: ${{ env.PROPAGATE_TIME }}
+        propagate_time: ${{ env.PROPAGATE_TIME }}
