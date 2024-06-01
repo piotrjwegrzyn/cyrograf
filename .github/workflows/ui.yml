@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Pin and publish
     steps:
+    - uses: actions/checkout@v4
     - name: IPFS Publish
       id: IPFS
       uses: piotrjwegrzyn/ipfs-aio-publisher@v1.1.0
