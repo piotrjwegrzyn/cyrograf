@@ -1,0 +1,23 @@
+name: Unit tests for Cyrograf ETH
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths: [ 'eth/**' ]
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    name: A job to run sample solidity tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Environment Setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Run SUT action with default provider
+        uses: EthereumRemix/sol-test@v1.2
+        with:
+          test-path: 'eth/tests/'
+          compiler-version: '0.8.26'

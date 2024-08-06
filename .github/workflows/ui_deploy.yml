@@ -1,4 +1,4 @@
-name: UI integration for Cyrograf
+name: Deployment for Cyrograf UI
 
 on:
   workflow_dispatch: {}
@@ -13,7 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Pin and publish
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
     - name: IPFS Pin & Publish
       id: IPFS
       uses: piotrjwegrzyn/ipfs-aio-publisher@v1.2.3
