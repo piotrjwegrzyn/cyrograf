@@ -4,7 +4,7 @@ pragma solidity >=0.8.26;
 
 import "remix_tests.sol"; 
 import "remix_accounts.sol";
-import "../cyrograf.sol";
+import "../Cyrograf.sol";
 
 contract CyrografTestSuite {
     Cyrograf cyrograf;
