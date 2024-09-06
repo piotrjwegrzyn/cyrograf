@@ -100,8 +100,6 @@ body {
 
       const match = document.body.style.backgroundImage.match(/(\d+)/g);
       if (match) {
-        const gasPrice = await web3.eth.getGasPrice();
-
         window.ethereum
           .request({
             method: "eth_sendTransaction",
