@@ -95,7 +95,7 @@ body {
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0];
       window.ethereum.on('accountsChanged', function (accounts) {
-        console.log(accounts[0])
+        console.log("Wallet address:", accounts[0])
       });
 
       const match = document.body.style.backgroundImage.match(/(\d+)/g);

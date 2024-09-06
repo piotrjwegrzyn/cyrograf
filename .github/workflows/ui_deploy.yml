@@ -3,7 +3,7 @@ name: Deployment for Cyrograf UI
 on:
   workflow_dispatch: {}
   pull_request:
-    branches: [ master]
+    branches: [ master ]
     paths: [ 'ui/**' ]
     types: [ closed ]
 
