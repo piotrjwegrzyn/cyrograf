@@ -7,7 +7,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-image: linear-gradient(to bottom right, rgb(200, 20, 20) , rgb(200, 200, 20));
+  background-image: linear-gradient(to bottom right, rgb(0, 0, 0), rgb(255, 255, 255));
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -29,12 +29,13 @@ body {
 .title-text {
   text-decoration: solid;
   padding: 10px;
+  margin-bottom: 10px;
 }
 
 .clicker {
   font-size: x-large;
   padding: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
   outline: solid 1px cadetblue;
   background-color: aliceblue;
 }
@@ -44,8 +45,8 @@ body {
   outline: solid 2px;
 }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.12.1/web3.min.js"></script>
   </head>
-
   <body>
     <div class="main">
       <div class="element">
@@ -53,20 +54,105 @@ body {
           Let's play a game!
         </div>
 
-        <div onclick="changeBackgroundGradient()" class="clicker">
-          Click me and save colour!
+        <div onclick="generateBackground()" class="clicker">
+          Click me to generate colours!
+        </div>
+
+        <div id="saveBackground" onclick="saveBackground()" class="clicker">
+          Click me to save colours!
         </div>
       </div>
     </div>
   </body>
-<script type="text/javascript">
+<script>
+(async ()=>{
+  const contractInfo = await readFileContent('sc_connector.json')
+  const contractABI = contractInfo['abi']
+  const contractAddress = contractInfo['contract'];
 
-function changeBackgroundGradient() {
-    const color1 = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
-    const color2 = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+  const web3 = new Web3(window.ethereum);
+  const cyrografContract = new web3.eth.Contract(contractABI, contractAddress);
 
-    document.body.style.backgroundImage = `linear-gradient(to bottom right, ${color1}, ${color2})`;
+  retriveBackgroundFromBlockchain()
+
+  document.getElementById("saveBackground").onclick = saveBackground
+
+  async function retriveBackgroundFromBlockchain() {
+    try {
+      const background = await cyrografContract.methods.getBackground().call();
+      
+      const color1 = `rgb(${Number(background.northWest.x)}, ${Number(background.northWest.y)}, ${Number(background.northWest.z)})`;
+      const color2 = `rgb(${Number(background.southEast.x)}, ${Number(background.southEast.y)}, ${Number(background.southEast.z)})`;
+
+      document.body.style.backgroundImage = `linear-gradient(to bottom right, ${color1}, ${color2})`;
+    } catch (error) {
+      console.error("Error getting background:", error);
+    }
+  }
+
+  async function saveBackground() {
+    try {
+      const accounts = await web3.eth.getAccounts();
+      const account = accounts[0];
+      window.ethereum.on('accountsChanged', function (accounts) {
+        console.log(accounts[0])
+      });
+
+      const match = document.body.style.backgroundImage.match(/(\d+)/g);
+      if (match) {
+        const gasPrice = await web3.eth.getGasPrice();
+
+        window.ethereum
+          .request({
+            method: "eth_sendTransaction",
+            params: [
+              {
+                from: account,
+                gasLimit: web3.utils.toHex(100000),
+                value: '0x00',
+                to: contractAddress,
+                data: cyrografContract.methods.setBackground(
+                    {x: match[0], y: match[1], z: match[2]},
+                    {x: match[3], y: match[4], z: match[5]}
+                ).encodeABI(),
+              },
+            ],
+          })
+          .then((txHash) => {
+            console.log(txHash)
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      }
+    } catch (error) {
+      console.error("Error saving background:", error);
+    }
+  }
+})()
+
+function readFileContent(filePath) {
+  return fetch(filePath)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(content => {
+        console.log(content)
+        return content
+    })
+    .catch(error => {
+        console.error('Failed to read file:', error);
+    });
 }
 
+function generateBackground() {
+  const color1 = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+  const color2 = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+
+  document.body.style.backgroundImage = `linear-gradient(to bottom right, ${color1}, ${color2})`;
+}
 </script>
 </html>
