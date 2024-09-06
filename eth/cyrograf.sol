@@ -11,15 +11,14 @@ contract Cyrograf {
 
     struct Background {
         address author;
-        RGB topLeft;
-        RGB topRight;
+        RGB northWest;
+        RGB southEast;
     }
 
     Background currentBackground;
 
     constructor() {
         currentBackground = Background(msg.sender, RGB(0,0,0), RGB(255,255,255));
-
     }
 
     function getBackground() public view returns (Background memory){
@@ -28,7 +27,7 @@ contract Cyrograf {
 
     function setBackground(RGB memory northWest, RGB memory southEast) external {
         currentBackground.author = msg.sender;
-        currentBackground.topLeft = northWest;
-        currentBackground.topRight = southEast;
+        currentBackground.northWest = northWest;
+        currentBackground.southEast = southEast;
     }
 }
