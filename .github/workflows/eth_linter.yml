@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [ master ]
     paths: [ 'eth/**' ]
-  merge_group:
-    branches: [ master ]
-    types: [checks_requested]
 
 jobs:
   analyze:
