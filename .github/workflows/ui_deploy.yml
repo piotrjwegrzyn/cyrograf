@@ -9,6 +9,7 @@ on:
 
 jobs:
   push_to_ipfs:
+    if: false
     runs-on: ubuntu-latest
     name: Pin and publish
     steps:
