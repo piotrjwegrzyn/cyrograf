@@ -1,4 +1,4 @@
-name: Slither Analysis for Cyrograf ETH
+name: "ETH Cyrograf: linter analysis"
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    name: A job to run linter
+    name: ETH Lint
     steps:
     - name: Checkout
       uses: actions/checkout@v4
