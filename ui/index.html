@@ -66,16 +66,16 @@ body {
   </body>
 <script>
 (async ()=>{
-  const contractInfo = await readFileContent('sc_connector.json')
-  const contractABI = contractInfo['abi']
-  const contractAddress = contractInfo['contract'];
+  const contractInfo = await readFileContent('sc_connector.json');
+  const contractAddress = contractInfo['contract_address'];
+  const contractABI = contractInfo['contract_abi'];
 
   const web3 = new Web3(window.ethereum);
   const cyrografContract = new web3.eth.Contract(contractABI, contractAddress);
 
-  retriveBackgroundFromBlockchain()
+  retriveBackgroundFromBlockchain();
 
-  document.getElementById("saveBackground").onclick = saveBackground
+  document.getElementById("saveBackground").onclick = saveBackground;
 
   async function retriveBackgroundFromBlockchain() {
     try {
@@ -95,29 +95,37 @@ body {
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0];
       window.ethereum.on('accountsChanged', function (accounts) {
-        console.log("Wallet address:", accounts[0])
+        console.log("Wallet address:", accounts[0]);
       });
 
       const match = document.body.style.backgroundImage.match(/(\d+)/g);
       if (match) {
+
+        transactionData = cyrografContract.methods.setBackground(
+          {x: match[0], y: match[1], z: match[2]},
+          {x: match[3], y: match[4], z: match[5]}
+        ).encodeABI();
+
+        estimatedGas = await web3.eth.estimateGas({
+          to: contractAddress,
+          data: transactionData
+        })
+
         window.ethereum
           .request({
             method: "eth_sendTransaction",
             params: [
               {
-                from: account,
-                gasLimit: web3.utils.toHex(100000),
-                value: '0x00',
                 to: contractAddress,
-                data: cyrografContract.methods.setBackground(
-                    {x: match[0], y: match[1], z: match[2]},
-                    {x: match[3], y: match[4], z: match[5]}
-                ).encodeABI(),
+                from: account,
+                gas: web3.utils.toHex(Number(estimatedGas)),
+                value: '0x00',
+                data: transactionData,
               },
             ],
           })
           .then((txHash) => {
-            console.log(txHash)
+            console.log(txHash);
           })
           .catch((error) => {
             console.log(error);
@@ -138,7 +146,7 @@ function readFileContent(filePath) {
         return response.json();
     })
     .then(content => {
-        console.log(content)
+        console.log(content);
         return content
     })
     .catch(error => {

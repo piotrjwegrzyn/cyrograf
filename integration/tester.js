@@ -40,7 +40,7 @@ const fs = require('node:fs/promises');
         {x: xNW, y: yNW, z: zNW},
         {x: xSE, y: ySE, z: zSE}
       ).send({from: account});
-      console.log(`Set NorthWest/SouthEast: rgb(${xNW}, ${yNW}, ${zNW}) / rgb(${xSE}, ${ySE}, ${zSE})`)
+      console.log(`Set NorthWest/SouthEast: rgb(${xNW}, ${yNW}, ${zNW}) / rgb(${xSE}, ${ySE}, ${zSE})`);
     } catch (error) {
       console.error("Error setting background:", error);
     }
