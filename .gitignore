@@ -2,3 +2,10 @@
 **/.states/
 **/artifacts/
 **/.deps/
+
+cache/
+out/
+
+integration/node_modules/
+integration/package-lock.json
+integration/package.json
