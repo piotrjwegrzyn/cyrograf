@@ -37,7 +37,7 @@ jobs:
           node-version: latest
       - name: Install dependencies
         run: npm install web3
-      - uses: actions/download-artifact@master
+      - uses: actions/download-artifact@v4
         with:
           name: sc_connector.json
       - name: Run tests
@@ -54,3 +54,34 @@ jobs:
           cat integration/sc_connector.json
           node --no-deprecation integration/tester.js
         shell: bash
+  connector_updater:
+    name: ETH connector PR
+    needs: integration_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Create new branch
+        run: |
+          branch_name=new-connector-$(eval "date +%y%m%d-%H%M%S")
+          git checkout -b ${branch_name}
+      - uses: actions/download-artifact@v4
+        with:
+          name: sc_connector.json
+      - name: Update files
+        run: |
+          cp sc_connector.json ui/
+          cp sc_connector.json integration/
+      - name: Commit changes
+        run: |
+          git config --global user.email "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.name "github-actions[bot]"
+          git add ui/ integration/
+          git commit -m "${branch_name}"
+      - name: Push changes
+        run: |
+          git push origin ${branch_name}
+      - name: Create pull request
+        run: gh pr create -B master -H ${branch_name} --title 'Merge ${branch_name} into base_branch' --body 'Created by GitHub Action'
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

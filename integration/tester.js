@@ -47,6 +47,7 @@ const fs = require('node:fs/promises');
     }
   }
 
+  await getBackground();
   await setBackground(0, 0, 0, 255, 255, 255);
   await getBackground();
   await setBackground(21, 37, 69, 128, 64, 32);
