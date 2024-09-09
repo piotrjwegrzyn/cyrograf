@@ -1,0 +1,29 @@
+name: "UI Cyrograf: Deployment"
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches: [ master ]
+    paths: [ 'ui/**' ]
+    types: [ closed ]
+
+jobs:
+  push_to_ipfs:
+    runs-on: ubuntu-latest
+    name: Pin and publish
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: IPFS Pin & Publish
+      id: IPFS
+      uses: piotrjwegrzyn/ipfs-aio-publisher@v1.2.3
+      with:
+        upload_path: 'ui/'
+        remote_service_name: ${{ vars.REMOTE_SERVICE_NAME }}
+        remote_service_endpoint: ${{ secrets.REMOTE_SERVICE_ENDPOINT }}
+        remote_service_key: ${{ secrets.REMOTE_SERVICE_KEY }}
+        remote_background: ${{ vars.REMOTE_BACKGROUND }}
+        remote_unpin_old_cid: ${{ vars.REMOTE_UNPIN_OLD_CID }}
+        publish_key_name: ${{ secrets.PUBLISH_KEY_NAME }}
+        publish_key_value: ${{ secrets.PUBLISH_KEY_VALUE }}
+        propagate_time: ${{ vars.PROPAGATE_TIME }}
