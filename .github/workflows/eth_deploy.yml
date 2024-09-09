@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: ETH Deploy
-        uses: piotrjwegrzyn/evm-deployment@v2.2.3
+        uses: piotrjwegrzyn/evm-deployment@v2.2.4
         with:
           contract-name: 'Cyrograf'
           contract-filename: 'cyrograf'
@@ -40,17 +40,16 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: sc_connector.json
-          path: out/
       - name: Run tests
         env:
           RPC_URL: ${{ secrets.RPC_ETH_SEPOLIA_HTTPS }}
           ACCOUNT_ADDRESS: ${{ secrets.DEPLOYER_ADDRESS }}
           PRIVATE_KEY: ${{ secrets.DEPLOYER_PK }}
         run: |
-          rm integration/sc_connector.json
           echo "old connector:\n\n"
           cat integration/sc_connector.json
-          cp out/sc_connector.json integration/sc_connector.json
+          rm integration/sc_connector.json
+          cp sc_connector.json integration/sc_connector.json
           echo "new connector:\n\n"
           cat integration/sc_connector.json
           node --no-deprecation integration/tester.js
