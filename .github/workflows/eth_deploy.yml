@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: ETH Deploy
-        uses: piotrjwegrzyn/evm-deployment@v2.2.2
+        uses: piotrjwegrzyn/evm-deployment@v2.2.3
         with:
           contract-name: 'Cyrograf'
           contract-filename: 'cyrograf'
