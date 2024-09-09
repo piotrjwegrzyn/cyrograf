@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: ETH Deploy
-        uses: piotrjwegrzyn/evm-deployment@v2.2.1
+        uses: piotrjwegrzyn/evm-deployment@v2.2.2
         with:
           contract-name: 'Cyrograf'
           contract-filename: 'cyrograf'
@@ -23,4 +23,3 @@ jobs:
           parent-dir: 'eth/'
           deployer-pk: ${{ secrets.DEPLOYER_PK }}
           rpc-url: ${{ secrets.RPC_ETH_SEPOLIA_HTTPS }}
-          verify: true

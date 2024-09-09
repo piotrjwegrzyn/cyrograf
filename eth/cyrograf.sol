@@ -18,7 +18,7 @@ contract Cyrograf {
     Background currentBackground;
 
     constructor() {
-        currentBackground = Background(msg.sender, RGB(21,37,69), RGB(128,64,32));
+        currentBackground = Background(msg.sender, RGB(21,37,69), RGB(128,64,255));
     }
 
     function getBackground() public view returns (Background memory){
