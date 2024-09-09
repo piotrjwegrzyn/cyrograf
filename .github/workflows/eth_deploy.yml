@@ -9,6 +9,7 @@ on:
 
 jobs:
   deploy:
+    name: ETH Deploy
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -23,3 +24,34 @@ jobs:
           parent-dir: 'eth/'
           deployer-pk: ${{ secrets.DEPLOYER_PK }}
           rpc-url: ${{ secrets.RPC_ETH_SEPOLIA_HTTPS }}
+  integration_test:
+    name: ETH integration tests
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Environment Setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+      - name: Install dependencies
+        run: npm install web3
+      - uses: actions/download-artifact@master
+        with:
+          name: sc_connector.json
+          path: out/
+      - name: Run tests
+        env:
+          RPC_URL: ${{ secrets.RPC_ETH_SEPOLIA_HTTPS }}
+          ACCOUNT_ADDRESS: ${{ secrets.DEPLOYER_ADDRESS }}
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PK }}
+        run: |
+          rm integration/sc_connector.json
+          echo "old connector:\n\n"
+          cat integration/sc_connector.json
+          cp out/sc_connector.json integration/sc_connector.json
+          echo "new connector:\n\n"
+          cat integration/sc_connector.json
+          node --no-deprecation integration/tester.js
+        shell: bash

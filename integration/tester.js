@@ -1,4 +1,5 @@
 // To run this script use:
+// export RPC_URL="https://rpc.sepolia.org/"
 // export ACCOUNT_ADDRESS="ADDRESS" &&\
 // export PRIVATE_KEY="KEY" &&\
 // node --no-deprecation ./tester.js
@@ -8,7 +9,7 @@ const fs = require('node:fs/promises');
 
 (async ()=>{
 
-  const web3 = new Web3('https://rpc.sepolia.org/');
+  const web3 = new Web3(process.env.RPC_URL);
 
   const contractInfo = await readFileContent('./sc_connector.json');
   const contractAddress = contractInfo['contract_address'];
