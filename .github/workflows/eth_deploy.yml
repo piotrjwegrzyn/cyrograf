@@ -62,8 +62,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Create new branch
+        id: create_branch
         run: |
           branch_name=new-connector-$(eval "date +%y%m%d-%H%M%S")
+          echo "branch_name=${branch_name}" >> $GITHUB_OUTPUT
           git checkout -b ${branch_name}
       - uses: actions/download-artifact@v4
         with:
@@ -77,11 +79,11 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git add ui/ integration/
-          git commit -m "${branch_name}"
+          git commit -m "${{steps.create_branch.outputs.branch_name}}"
       - name: Push changes
         run: |
-          git push origin ${branch_name}
+          git push origin ${{steps.create_branch.outputs.branch_name}}
       - name: Create pull request
-        run: gh pr create -B master -H ${branch_name} --title 'Merge ${branch_name} into base_branch' --body 'Created by GitHub Action'
+        run: gh pr create -B master -H ${{steps.create_branch.outputs.branch_name}} --title 'Merge ${{steps.create_branch.outputs.branch_name}} into base_branch' --body 'Created by GitHub Action'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
