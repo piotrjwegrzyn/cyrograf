@@ -1,0 +1,26 @@
+name: "ETH Cyrograf: Deploy contract to testnet"
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches: [ master ]
+    paths: [ 'eth/**' ]
+    types: [ closed ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: ETH Deploy
+        uses: piotrjwegrzyn/evm-deployment@v2.2.0
+        with:
+          contract-name: 'Cyrograf'
+          contract-filename: 'cyrograf'
+          contract-connector: 'sc_connector'
+          parent-dir: 'eth/'
+          deployer-pk: ${{ secrets.DEPLOYER_PK }}
+          rpc-url: ${{ secrets.RPC_ETH_SEPOLIA_HTTPS }}
+          verify: true
