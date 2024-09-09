@@ -3,10 +3,12 @@
 **/artifacts/
 **/.deps/
 
-integration/node_modules/
-integration/package-lock.json
-integration/package.json
+**/node_modules/
+**/package-lock.json
+**/package.json
 **/test/
 bin/
 cache/
 **/out/
+
+sc_connector.json
